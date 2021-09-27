@@ -3,25 +3,21 @@ import {
   View, 
   StyleSheet, 
   Dimensions, 
+  TouchableOpacityProps,
   Text } from 'react-native';
 
 import Button from './Button';
 
 const width = Dimensions.get('screen').width;
 
-interface SalonListProps{
+interface SalonListProps extends TouchableOpacityProps {
   name: string,
   price: string,
-  duration: string,
-  navigation:any
+  duration: string
 }
 
 
-export default function SalonList({name, price, duration, navigation}: SalonListProps){
-
-    function hairStylist(){
-        navigation.navigate('HairStylist');
-    }
+export default function SalonList({name, price, duration, ...rest}: SalonListProps){
 
   return(
     <View style = {styles.container}>
@@ -38,7 +34,7 @@ export default function SalonList({name, price, duration, navigation}: SalonList
       </View>
 
       <View style = {styles.buttonContainer}>
-          <Button title = "Agendar" onPress = { hairStylist } />
+          <Button title = "Agendar" {...rest} />
       </View>
 
     </View>

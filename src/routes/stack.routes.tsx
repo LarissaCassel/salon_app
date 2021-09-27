@@ -19,8 +19,8 @@ export default function NavigationStack(){
      <NavigationContainer> 
       <StackRoutes.Navigator screenOptions={{ headerShown: false }}>
 
+        <StackRoutes.Screen name="BottomTabs" component={BottomTabs} />
         <StackRoutes.Screen name="Welcome" component={Welcome} />
-        <StackRoutes.Screen name="BottomTabs" component={BottomTabs} /> 
         <StackRoutes.Screen name="ToSchedule" component={ToSchedule} />
         <StackRoutes.Screen name="Register" component={Register} />
         <StackRoutes.Screen name="Login" component={Login} />

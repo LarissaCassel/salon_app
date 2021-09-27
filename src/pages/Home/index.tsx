@@ -1,4 +1,4 @@
-import React from  'react';
+import React,{useState, useEffect} from  'react';
 import { 
   View, 
   ImageBackground, 
@@ -7,13 +7,47 @@ import {
   FlatList } from 'react-native';
   
 import styles from './styles';
-import Galery from '../../components/Galery';
-import {publication} from  '../../data/apiTestData';
 
-const logo = "https://pnclogosofficial.s3.us-west-2.amazonaws.com/2020/10/09153501/salon-logos-20-scaled.jpg";
+import Galery from '../../components/Galery';
+
+import api from '../../services/api';
+
 const backgroundImage = "https://cdn.acritica.net/img/pc/450/300/dn_noticia/2020/02/1581453953.jpeg";
 
+const {SALON_ID}= process.env;
+
+interface salonData{
+    salonName: string,
+    salonLogo: string,
+    city: string,
+    status: string
+}
+
+interface GaleryData{
+    key: string,
+    image: string,
+    name: string,
+    icon: string,
+    date: string
+}
+
 export default function Home(){
+
+  const [salonData, setSalonData] = useState<salonData>();
+  const [galery, setGalery] = useState<GaleryData[]>();
+
+  useEffect(() => {
+      api.get(`salon/${SALON_ID}`)
+      .then( response => setSalonData(response.data.salonData))
+      .catch(err => console.log(err))
+  }, []);
+
+  useEffect(() => {
+    api.get(`timeline/salon/${SALON_ID}`)
+    .then( response => setGalery(response.data.publication))
+    .catch(err => console.log(err))
+}, []);
+
   return(
       <View style = {styles.container}>
           <ImageBackground 
@@ -25,25 +59,25 @@ export default function Home(){
             <View style = {styles.headerBackground}>
                 <Image 
                     style = {styles.salonLogo}
-                    source = {{ uri: logo }} 
+                    source = {{ uri: salonData?.salonLogo }} 
                 /> 
                 <View style = {styles.headerFooter}>
 
                   <View style = {styles.headerFooterContain} >
 
                     <Text style = {styles.salonNameLabel}>
-                          Salon Online
+                          {salonData?.salonName}
                       </Text>
 
                       <Text style = {styles.cityNameLabel}>
-                          Porto Alegre-RS
+                          {salonData?.city}
                       </Text>
 
                   </View>
                     
                     <View style = {styles.signs}>
                       <Text style = {styles.signsText}>
-                          ABERTO
+                          {salonData?.status}
                       </Text>
                     </View>
 
@@ -60,7 +94,7 @@ export default function Home(){
             </Text>
 
             <FlatList
-             data = {publication}
+             data = {galery}
              keyExtractor = { (item) => item.key }
              renderItem = {
                ({item}) =>{
